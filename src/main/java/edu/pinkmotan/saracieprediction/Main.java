@@ -19,15 +19,5 @@ public class Main {
 
   public static void main(String[] args) {
 
-    File file = new File(".\\src\\main\\resources\\train.csv");
-    try {
-      Matrix result = Matrix.Factory.importFrom().file(file).asDenseCSV();
-      System.out.println("Columns: " + result.getDimensionCount());
-      System.out.println("First label: " + result.getColumnLabel(0));
-//      result.showGUI();
-
-    } catch (IOException ex) {
-      Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-    }
   }
 }
