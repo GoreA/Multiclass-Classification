@@ -5,11 +5,10 @@
  */
 package edu.pinkmotan.saracieprediction;
 
-import java.io.File;
+import edu.pinkmotan.saracieprediction.household.Person;
+import edu.pinkmotan.saracieprediction.household.PersonHelper;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.ujmp.core.Matrix;
+import java.util.List;
 
 /**
  *
@@ -17,7 +16,9 @@ import org.ujmp.core.Matrix;
  */
 public class Main {
 
-  public static void main(String[] args) {
-
+  public static void main(String[] args) throws IOException {
+    List<Person> persons = PersonHelper.readPersons("src\\main\\resources\\train.csv");
+    
+    PersonHelper.populateResults(persons, "src\\main\\resources\\results.csv");
   }
 }
