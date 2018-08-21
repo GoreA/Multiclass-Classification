@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * @author agore
  */
 public class Person {
+
   String id;
   String houseId;
   int target;
@@ -48,6 +49,8 @@ public class Person {
   public void setParameters(ArrayList<Integer> parameters) {
     this.parameters = parameters;
   }
-  
-  
+
+  public boolean isWithoutTarget() {
+    return Math.round(this.getTarget()) == 5;
+  }
 }
