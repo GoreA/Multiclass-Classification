@@ -22,7 +22,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author agore
  */
 public class PersonHelper {
-
+  
   public static List<Person> readPersons(String path) throws IOException {
     List<Person> persons = new ArrayList<>();
     CSVParser parser = new CSVParser(new FileReader(path), CSVFormat.DEFAULT.withHeader());
@@ -30,7 +30,11 @@ public class PersonHelper {
       Person person = new Person();
       person.setId(record.get("Id"));
       person.setHouseId(record.get("idhogar"));
-      person.setTarget(Integer.parseInt(record.get("Target")));
+      if (record.isMapped("Target")) {
+        person.setTarget(Integer.parseInt(record.get("Target")));
+      } else {
+        person.setTarget(5);
+      }
       List<Integer> parameters = new ArrayList<>();
       for (String value : record) {
         if (!value.isEmpty() && !value.equals(person.getId()) && !value.equals(person.getHouseId()) && !value.equals(person.getTarget())) {
@@ -43,12 +47,12 @@ public class PersonHelper {
           parameters.add(0);
         }
       }
-
+      
       persons.add(person);
     }
     return persons;
   }
-
+  
   public static void populateResults(List<Person> persons, String path) {
     try {
       BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
@@ -60,7 +64,7 @@ public class PersonHelper {
         oneLine.append(person.getId());
         oneLine.append(",");
         oneLine.append(person.getTarget());
-
+        
         bw.write(oneLine.toString());
         bw.newLine();
         bw.flush();
