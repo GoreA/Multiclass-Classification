@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -22,7 +23,7 @@ import org.apache.commons.lang3.StringUtils;
  * @author agore
  */
 public class PersonHelper {
-  
+
   public static List<Person> readPersons(String path) throws IOException {
     List<Person> persons = new ArrayList<>();
     CSVParser parser = new CSVParser(new FileReader(path), CSVFormat.DEFAULT.withHeader());
@@ -35,24 +36,44 @@ public class PersonHelper {
       } else {
         person.setTarget(5);
       }
-      List<Integer> parameters = new ArrayList<>();
-      for (String value : record) {
-        if (!value.isEmpty() && !value.equals(person.getId()) && !value.equals(person.getHouseId()) && !value.equals(person.getTarget())) {
-          if (StringUtils.isNumeric(value)) {
-            parameters.add(Integer.valueOf(value));
-          } else {
-            parameters.add(0);
+
+      List<Float> parameters = new ArrayList<>();
+      Map<String, String> mappedRecord = record.toMap();
+      if (record.isMapped("Target")) {
+        mappedRecord.remove("Target");
+      }
+
+      for (Map.Entry<String, String> entry : mappedRecord.entrySet()) {
+        String value = entry.getValue();
+        if (!value.isEmpty()) {
+          if (!value.equals(person.getId()) && !value.equals(person.getHouseId()) && !value.equals(person.getTarget())) {
+            if (StringUtils.isNumeric(value)) {
+              parameters.add(Float.valueOf(value));
+            } else {
+              switch (value.toLowerCase()) {
+                case "no":
+                  parameters.add(0f);
+                  break;
+                case "yes":
+                  parameters.add(1f);
+                  break;
+                default:
+                  parameters.add(Float.valueOf(value));
+              }
+            }
           }
         } else {
-          parameters.add(0);
+          parameters.add(0f);
         }
       }
-      
+
+      person.setParameters(parameters);
       persons.add(person);
     }
+
     return persons;
   }
-  
+
   public static void populateResults(List<Person> persons, String path) {
     try {
       BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
@@ -64,7 +85,7 @@ public class PersonHelper {
         oneLine.append(person.getId());
         oneLine.append(",");
         oneLine.append(person.getTarget());
-        
+
         bw.write(oneLine.toString());
         bw.newLine();
         bw.flush();
