@@ -5,7 +5,7 @@
  */
 package edu.pinkmotan.saracieprediction.household;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -16,7 +16,8 @@ public class Person {
   String id;
   String houseId;
   int target;
-  ArrayList<Integer> parameters;
+  int targetMask;
+  List<Float> parameters;
 
   public String getId() {
     return id;
@@ -42,15 +43,27 @@ public class Person {
     this.target = target;
   }
 
-  public ArrayList<Integer> getParameters() {
+  public int getTargetMask() {
+    return targetMask;
+  }
+
+  public void setTargetMask(int targetMask) {
+    this.targetMask = targetMask;
+  }
+
+  public List<Float> getParameters() {
     return parameters;
   }
 
-  public void setParameters(ArrayList<Integer> parameters) {
+  public void setParameters(List<Float> parameters) {
     this.parameters = parameters;
   }
 
   public boolean isWithoutTarget() {
     return Math.round(this.getTarget()) == 5;
+  }
+
+  public boolean isWithoutTargetMask() {
+    return Math.round(this.getTargetMask()) == 0;
   }
 }
