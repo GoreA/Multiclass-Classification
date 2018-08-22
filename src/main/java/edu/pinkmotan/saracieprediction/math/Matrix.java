@@ -38,9 +38,9 @@ public class Matrix {
     return matrixY;
   }
 
-  public static Matrix createMatrix(List<Person> persons, String... methodNames) {
+  public static Matrix createMatrix(List<Person> persons) {
     try {
-      double[][] X = new double[persons.size()][persons.get(0).getParameters().size()];
+      double[][] X = new double[persons.size()][persons.get(0).getParameters().size() + 1];
       double[] Y = new double[persons.size()];
       for (int i = 0; i < persons.size(); i++) {
         Person person = persons.get(i);
@@ -54,7 +54,7 @@ public class Matrix {
       }
       for (int i = 0; i < persons.size(); i++) {
         Person person = persons.get(i);
-        Y[i] = (double) person.getTarget();
+        Y[i] = (double) person.getTargetMask();
       }
 
       return new Matrix(X, Y);
