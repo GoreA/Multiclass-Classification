@@ -130,8 +130,8 @@ public class Gradient {
   public static double calculateCost(double[] theta, Person p) {
     try {
       double cost = theta[0];
-      for (int i = 0; i < theta.length; i++) {
-        cost = cost + ((double) (p.getParameters().get(i)) * theta[i]);
+      for (int i = 1; i < theta.length; i++) {
+        cost = cost + ((double) (p.getParameters().get(i-1)) * theta[i]);
       }
       return cost;
     } catch (IllegalArgumentException ex) {
