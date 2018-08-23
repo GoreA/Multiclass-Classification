@@ -30,33 +30,32 @@ public class Main {
     persons.addAll(trainPersons);
     persons.addAll(testPersons);
 
-    populateTarget(trainPersons, persons, finalResults, 1);
-    populateTarget(trainPersons, persons, finalResults, 2);
-    populateTarget(trainPersons, persons, finalResults, 3);
-    populateTarget(trainPersons, persons, finalResults, 4);
+    populateTarget(trainPersons, testPersons, finalResults, 1);
+    populateTarget(trainPersons, testPersons, finalResults, 2);
+    populateTarget(trainPersons, testPersons, finalResults, 3);
 
-    for(Person p : trainPersons) {
-      if(finalResults.contains(p)){
-        finalResults.remove(p);
+//    the rest of persons automaticaly will get target = 4
+    ArrayList<Person> finalFinal = new ArrayList<>();
+    for (Person testPerson : testPersons) {
+      if(!finalResults.contains(testPerson)){
+        testPerson.setTarget(4);
+        finalResults.add(testPerson);
       }
     }
     PersonHelper.populateResults(finalResults, "src\\main\\resources\\results.csv");
   }
 
-  private static void populateTarget(List<Person> persons, float f, int i) {
-    List<Person> personsWithTarget = persons.stream().filter(p -> !p.isWithoutTarget()).collect(Collectors.toList());
-    List<Person> personsWithoutTarget = persons.stream().filter(Person::isWithoutTarget).collect(Collectors.toList());
-
-    Matrix m = Matrix.createMatrix(personsWithTarget);
+  private static void populateTarget(List<Person> trainPersons, List<Person> testPersons, float f, int i) {
+    Matrix m = Matrix.createMatrix(trainPersons);
     double[] theta = Gradient.calculateLogisticTheta(m, f, i);
 
-    personsWithoutTarget.forEach(p -> {
+    testPersons.forEach(p -> {
       double targetMask = Math.round(Gradient.sigmoid(Gradient.calculateCost(theta, p)));
       p.setTargetMask((int) Math.round(targetMask));
     });
   }
 
-  private static void populateTarget(List<Person> trainPersons, List<Person> persons, List<Person> finalResults, int target) {
+  private static void populateTarget(List<Person> trainPersons, List<Person> testPersons, List<Person> finalResults, int target) {
 
     for (Person p : trainPersons) {
       if (p.getTarget() == target) {
@@ -66,17 +65,17 @@ public class Main {
       }
     }
 
-    populateTarget(persons, 0.015f, 10);
-    
-    for (Person person : persons) {
+    populateTarget(trainPersons, testPersons, 0.000003f, 1000);
+
+    for (Person person : testPersons) {
       if (person.getTargetMask() == 1) {
         person.setTarget(target);
         finalResults.add(person);
       }
     }
-    
-    for(Person person : finalResults){
-      persons.remove(person);
+
+    for (Person person : finalResults) {
+      testPersons.remove(person);
     }
   }
 }
