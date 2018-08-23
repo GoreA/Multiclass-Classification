@@ -66,4 +66,16 @@ public class Person {
   public boolean isWithoutTargetMask() {
     return Math.round(this.getTargetMask()) == 0;
   }
+  
+  @Override
+  public boolean equals(Object anObject) {
+        if (this == anObject) {
+            return true;
+        }
+        if (anObject instanceof Person) {
+          if(this.getId().equals(((Person) anObject).getId()))
+            return true;
+        }
+        return false;
+    }
 }
