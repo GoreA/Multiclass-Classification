@@ -95,7 +95,7 @@ public class Gradient {
         }
         theta[l] = theta[l] - (alpha / m) * div;
       }
-//        calculate the cost with obtained theta
+//        calculate the cost with obtained theta, H of theta vector
       for (int j = 0; j < m; j++) {
         double[] vectorX = matrix.getMatrixX()[j];
         cost[j] = 0;
@@ -109,7 +109,7 @@ public class Gradient {
       // TODO need to add regularisation.
       double J_part = getRegularization(theta, 10);
       for (int t = 0; t < m; t++) {
-        J_part += matrix.getMatrixY()[t] * Math.log(cost[t]) + (1 - matrix.getMatrixY()[t]) * Math.log(1 - cost[t]);
+          J_part += matrix.getMatrixY()[t] * Math.log(cost[t]) + (1 - matrix.getMatrixY()[t]) * Math.log(1 - cost[t]);
       }
 
       J_history[i] = J_part / m;
@@ -131,7 +131,7 @@ public class Gradient {
     try {
       double cost = theta[0];
       for (int i = 1; i < theta.length; i++) {
-        cost = cost + ((double) (p.getParameters().get(i-1)) * theta[i]);
+        cost = cost + ((double) (p.getParameters().get(i - 1)) * theta[i]);
       }
       return cost;
     } catch (IllegalArgumentException ex) {
